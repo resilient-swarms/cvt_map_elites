@@ -8,9 +8,41 @@
 
 #define MAP_WRITE_PARENTS
 
-namespace sferes {
-namespace stat {
-SFERES_STAT(Map, Stat) {
+namespace sferes
+{
+namespace stat
+{
+namespace _stat_map
+{
+// this is a nice (complicated) trick to detect if the type T has a member named 'size'
+// we need this because we might be unable to print the data (e.g. for a neural network)
+template <typename T, typename = int>
+struct HasSize : std::false_type
+{
+};
+template <typename T>
+struct HasSize<T, decltype(&T::size, 0)> : std::true_type
+{
+};
+
+class DataPrinter
+{
+public:
+  template <class T>
+  typename std::enable_if<HasSize<T>::value, void>::type print(const T &gen, std::ofstream &ofs) const
+  {
+    for (size_t k = 0; k < gen.size(); ++k)
+      ofs << gen.data(k) << " ";
+  }
+  template <class T>
+  typename std::enable_if<!HasSize<T>::value, void>::type print(const T &gen, std::ofstream &ofs) const
+  {
+    // do nothing
+  }
+};
+} // namespace _stat_map
+SFERES_STAT(Map, Stat)
+{
 public:
   typedef boost::shared_ptr<Phen> phen_t;
   typedef boost::array<float, Params::ea::number_of_dimensions> point_t;
@@ -19,24 +51,29 @@ public:
 
   Map() : number_of_dimensions(Params::ea::number_of_dimensions) {}
 
-  template <typename E> void refresh(const E &ea) {
+  template <typename E>
+  void refresh(const E &ea)
+  {
     this->_create_log_file(ea, "progress_archive.dat");
     _write_progress(ea, *this->_log_file);
 
-    if (ea.gen() % Params::pop::dump_period == 0) {
+    if (ea.gen() % Params::pop::dump_period == 0)
+    {
       _write_archive(ea.archive(), std::string("archive_"), ea);
     }
   }
 
   template <class Archive>
-  void serialize(Archive & ar, const unsigned int version) {
+  void serialize(Archive & ar, const unsigned int version)
+  {
     ar &BOOST_SERIALIZATION_NVP(number_of_dimensions);
   }
 
 protected:
   template <typename EA>
   void _write_archive(const std::vector<phen_t> &archive,
-                      const std::string &prefix, const EA &ea) const {
+                      const std::string &prefix, const EA &ea) const
+  {
     std::cout << "writing..." << prefix << ea.gen() << std::endl;
     std::string fname = ea.res_dir() + "/" + prefix +
                         boost::lexical_cast<std::string>(ea.gen()) +
@@ -44,28 +81,31 @@ protected:
 
     std::ofstream ofs(fname.c_str());
 
-    for (size_t i = 0; i < archive.size(); ++i) {
-      if (archive[i]) {
+    for (size_t i = 0; i < archive.size(); ++i)
+    {
+      if (archive[i])
+      {
+        // Write the index of the individual
+        ofs << i << "  ";
         // Write the descriptor
         std::vector<float> desc = archive[i]->fit().desc();
         for (size_t j = 0; j < number_of_dimensions; ++j)
-          ofs << std::setprecision(3) << desc[j] << " ";
+          ofs << std::setprecision(3) << desc[j] << "  ";
 
         // Write the fitness
         ofs << " " << archive[i]->fit().value() << "  ";
 
-        // Write the genotype
-        std::vector<float> genotype = archive[i]->data();
-        for (size_t j = 0; j < genotype.size(); ++j)
-          ofs << std::setprecision(50) << genotype[j] << " ";
-
+        // this will print only if there is a size() member in the genotype
+        // (which means that we have some kind of vector)
+        sferes::stat::_stat_map::DataPrinter().print(archive[i]->gen(), ofs);
         ofs << std::endl;
       }
     }
   }
 
   template <typename EA>
-  void _write_progress(const EA &ea, std::ofstream &ofs) const {
+  void _write_progress(const EA &ea, std::ofstream &ofs) const
+  {
     double archive_min = std::numeric_limits<double>::max();
     double archive_max = std::numeric_limits<double>::lowest();
     double archive_mean = 0.0;
@@ -73,8 +113,10 @@ protected:
 
     std::vector<phen_t> archive = ea.archive();
 
-    for (size_t i = 0; i < archive.size(); ++i) {
-      if (archive[i]) {
+    for (size_t i = 0; i < archive.size(); ++i)
+    {
+      if (archive[i])
+      {
         archive_size++;
 
         archive_mean += archive[i]->fit().value();
@@ -94,7 +136,7 @@ protected:
         << std::endl;
   }
 };
-}
-}
+} // namespace stat
+} // namespace sferes
 
 #endif
