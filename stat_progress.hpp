@@ -5,11 +5,13 @@
 #include <numeric>
 #include <sferes/stat/stat.hpp>
 
-namespace sferes {
-    namespace stat {
+namespace sferes
+{
+    namespace stat
+    {
         SFERES_STAT(MapProgress, Stat)
         {
-        public:
+            public:
             typedef boost::shared_ptr<Phen> phen_t;
             typedef boost::array<float, Params::ea::number_of_dimensions> point_t;
 
@@ -24,16 +26,11 @@ namespace sferes {
                 _write_progress(ea, *this->_log_file);
             }
 
-            template <class Archive>
-            void serialize(Archive & ar, const unsigned int version)
-            {
-                ar& BOOST_SERIALIZATION_NVP(number_of_dimensions);
-            }
-
-        protected:
+            protected:
             template <typename EA>
             void _write_progress(const EA& ea, std::ofstream& ofs) const
             {
+                std::cerr << "_write_progress " << std::endl;
                 double archive_min = std::numeric_limits<double>::max();
                 double archive_max = std::numeric_limits<double>::lowest();
                 double archive_mean = 0.0;
@@ -41,8 +38,10 @@ namespace sferes {
 
                 std::vector<phen_t> archive = ea.archive();
 
-                for (size_t i = 0; i < archive.size(); ++i) {
-                    if (archive[i]) {
+                for (size_t i = 0; i < archive.size(); ++i)
+                {
+                    if (archive[i])
+                    {
                         archive_size++;
 
                         archive_mean += archive[i]->fit().value();

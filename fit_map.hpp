@@ -17,6 +17,8 @@ namespace sferes {
             void set_desc(std::vector<float> & x)
             {
                 assert(x.size() == Params::ea::number_of_dimensions);
+                for (size_t i = 0; i < x.size(); ++i)
+                    assert(x[i] >= 0.0 && x[i] <= 1.0);
                 _desc = x;
             }
 
