@@ -50,8 +50,7 @@ SFERES_EA(CVTMapElites, Ea) {
     }
 
     // for resuming
-    void _set_pop(const std::vector<boost::shared_ptr<Phen> >& pop)
-    {
+    void _set_pop(const std::vector<boost::shared_ptr<Phen> >& pop) {
         assert(!pop.empty());
 
         for (size_t h = 0; h < pop.size(); ++h)
