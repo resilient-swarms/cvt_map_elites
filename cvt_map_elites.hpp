@@ -53,10 +53,24 @@ SFERES_EA(CVTMapElites, Ea) {
     void _set_pop(const std::vector<boost::shared_ptr<Phen> >& pop) {
         assert(!pop.empty());
 
+        std::cout << this->res_dir() << " " << this->gen() << std::endl;
+
+//        std::string fname = ea.res_dir() + "/archive_" +
+//                boost::lexical_cast<std::string>(ea.gen()) +
+//                std::string(".dat");
+
         for (size_t h = 0; h < pop.size(); ++h)
         {
-            pop[h]->develop();
-            pop[h]->fit().eval(*pop[h]);  // we need to evaluate the individuals again to get the descriptor values
+            std::cout << "Fitness of ind " << h << " is " << pop[h]->fit().value() << std::endl;
+            std::cout << "Descriptor is " ; //<< pop[h]->fit().desc()[0] << std::endl;
+            for (size_t desc_index = 0; desc_index < pop[h]->fit().desc().size(); ++desc_index)
+                std::cout << pop[h]->fit().desc()[desc_index] << " ";
+            std::cout << std::endl;
+
+//            pop[h]->develop();
+//            pop[h]->fit().eval(*pop[h]);  // we need to evaluate the individuals again to get the descriptor values
+
+//            std::cout << "Post-eval fitness of ind " << h << " is " << pop[h]->fit().value() << std::endl;
 
             point_t p = get_point(pop[h]);
 
