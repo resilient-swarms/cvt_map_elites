@@ -61,11 +61,11 @@ SFERES_EA(CVTMapElites, Ea) {
 
         for (size_t h = 0; h < pop.size(); ++h)
         {
-            std::cout << "Fitness of ind " << h << " is " << pop[h]->fit().value() << std::endl;
-            std::cout << "Descriptor is " ; //<< pop[h]->fit().desc()[0] << std::endl;
-            for (size_t desc_index = 0; desc_index < pop[h]->fit().desc().size(); ++desc_index)
-                std::cout << pop[h]->fit().desc()[desc_index] << " ";
-            std::cout << std::endl;
+//            std::cout << "Fitness of ind " << h << " is " << pop[h]->fit().value() << std::endl;
+//            std::cout << "Descriptor is " ; //<< pop[h]->fit().desc()[0] << std::endl;
+//            for (size_t desc_index = 0; desc_index < pop[h]->fit().desc().size(); ++desc_index)
+//                std::cout << pop[h]->fit().desc()[desc_index] << " ";
+//            std::cout << std::endl;
 
 //            pop[h]->develop();
 //            pop[h]->fit().eval(*pop[h]);  // we need to evaluate the individuals again to get the descriptor values
