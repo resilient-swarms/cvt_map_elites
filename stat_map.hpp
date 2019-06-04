@@ -59,8 +59,9 @@ namespace sferes
                 for (size_t i = 0; i < ea.archive().size(); ++i)
                     _archive.push_back(ea.archive()[i]);
 
-                this->_create_log_file(ea, "progress_archive.dat");
-                _write_progress(ea, *this->_log_file);
+//                Progress is already being written in state_progress, so why write it again here
+//                this->_create_log_file(ea, "progress_archive.dat");
+//                _write_progress(ea, *this->_log_file);
 
                 if (ea.gen() % Params::pop::dump_period == 0)
                 {
@@ -125,40 +126,41 @@ namespace sferes
                 }
             }
 
-            template <typename EA>
-            void _write_progress(const EA &ea, std::ofstream &ofs) const
-            {
-                std::cerr << "_write_progress " << std::endl;
+//            Progress is already being written in state_progress, so why write it again here
+//            template <typename EA>
+//            void _write_progress(const EA &ea, std::ofstream &ofs) const
+//            {
+//                std::cerr << "_write_progress " << std::endl;
 
-                double archive_min = std::numeric_limits<double>::max();
-                double archive_max = std::numeric_limits<double>::lowest();
-                double archive_mean = 0.0;
-                size_t archive_size = 0;
+//                double archive_min = std::numeric_limits<double>::max();
+//                double archive_max = std::numeric_limits<double>::lowest();
+//                double archive_mean = 0.0;
+//                size_t archive_size = 0;
 
-                std::vector<phen_t> archive = ea.archive();
+//                std::vector<phen_t> archive = ea.archive();
 
-                for (size_t i = 0; i < archive.size(); ++i)
-                {
-                    if (archive[i])
-                    {
-                        archive_size++;
+//                for (size_t i = 0; i < archive.size(); ++i)
+//                {
+//                    if (archive[i])
+//                    {
+//                        archive_size++;
 
-                        archive_mean += archive[i]->fit().value();
+//                        archive_mean += archive[i]->fit().value();
 
-                        if (archive[i]->fit().value() < archive_min)
-                            archive_min = archive[i]->fit().value();
+//                        if (archive[i]->fit().value() < archive_min)
+//                            archive_min = archive[i]->fit().value();
 
-                        if (archive[i]->fit().value() > archive_max)
-                            archive_max = archive[i]->fit().value();
-                    }
-                }
+//                        if (archive[i]->fit().value() > archive_max)
+//                            archive_max = archive[i]->fit().value();
+//                    }
+//                }
 
-                archive_mean /= archive.size();
+//                archive_mean /= archive.size();
 
-                ofs << ea.gen() << " " << ea.nb_evals() << " " << archive_size << " "
-                    << archive_min << " " << archive_mean << " " << archive_max
-                    << std::endl;
-            }
+//                ofs << ea.gen() << " " << ea.nb_evals() << " " << archive_size << " "
+//                    << archive_min << " " << archive_mean << " " << archive_max
+//                    << std::endl;
+//            }
         };
     } // namespace stat
 } // namespace sferes
