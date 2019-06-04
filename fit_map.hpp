@@ -22,6 +22,7 @@ namespace sferes {
                 _desc = x;
             }
 
+            // override the function so that we can write behaviour descriptor values along with the fitness value
             template<class Archive>
             void serialize(Archive & ar, const unsigned int version) {
               ar & BOOST_SERIALIZATION_NVP(this->_value);
