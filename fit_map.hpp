@@ -22,6 +22,12 @@ namespace sferes {
                 _desc = x;
             }
 
+            template<class Archive>
+            void serialize(Archive & ar, const unsigned int version) {
+              ar & BOOST_SERIALIZATION_NVP(this->_value);
+              ar & BOOST_SERIALIZATION_NVP(_desc);
+            }
+
         protected:
             std::vector<float> _desc;
         };
