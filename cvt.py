@@ -18,6 +18,10 @@ parser.add_argument('-s', type=int,default=1,
                     help='seed number')
 parser.add_argument('-t', type=str,default="",
                     help='a tag to help identify (e.g. run number)')
+
+parser.add_argument('-j', type=int,default=-1,
+                    help='the number of parallel jobs for KMeans')
+
 args = parser.parse_args()
 
 k = args.k
@@ -28,7 +32,7 @@ np.random.seed(args.s)
 
 X = np.random.rand(NumberOfSampedPoints,DIM)
 
-k_means = KMeans(init='k-means++', n_clusters=k, n_init=1, n_jobs=-1, verbose=1)
+k_means = KMeans(init='k-means++', n_clusters=k, n_init=1, n_jobs=args.j, verbose=1)
 k_means.fit(X)
 k_means_cluster_centers = k_means.cluster_centers_
 args.f = args.f if args.f=="" else args.f+"/"
