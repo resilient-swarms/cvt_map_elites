@@ -25,6 +25,7 @@ parser.add_argument('-l', type=str,default="",
                     help='prefix to batch files')
 parser.add_argument('-b', type=int ,default=0,
                     help='batch size for batch-based k-means')
+
 args = parser.parse_args()
 
 k = args.k
@@ -34,6 +35,7 @@ NumberOfSampedPoints = args.p
 np.random.seed(args.s)
 
 X = np.random.rand(NumberOfSampedPoints,DIM)
+
 
 if args.b > 0:
     k_means = MiniBatchKMeans(init='k-means++', n_clusters=k, n_init=1, verbose=1,batch_size=args.b)
@@ -45,6 +47,7 @@ if args.b > 0:
 else:
     k_means = KMeans(init='k-means++', n_clusters=k, n_init=1, n_jobs=args.j, verbose=1)
     k_means.fit(X)
+
 k_means_cluster_centers = k_means.cluster_centers_
 args.f = args.f if args.f=="" else args.f+"/"
 filename = args.f+'centroids_' + str(k) + '_' + str(DIM) + '%s.dat'%(args.t)
