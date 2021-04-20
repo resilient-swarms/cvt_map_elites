@@ -132,18 +132,17 @@ SFERES_EA(CVTMapElites, Ea) {
         point_t p = _get_point(i1);
 
         // Find the closest cluster
-        size_t archive_index = -1;
+        int archive_index = -1;
         double min_dist = std::numeric_limits<double>::max();
 
-        for (size_t i = 0; i < centroids.size(); ++i) {
+        for (int i = 0; i < centroids.size(); ++i) {
             double dist = _calc_dist(centroids[i], p);
-
             if (dist < min_dist) {
                 min_dist = dist;
                 archive_index = i;
             }
         }
-
+        std::cout << "archive index" << archive_index << std::endl;
         // If the archive is empty or the stored individual is less fit
         if (!_archive[archive_index] ||
                 i1->fit().value() > _archive[archive_index]->fit().value()) {
